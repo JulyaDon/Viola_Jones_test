@@ -5,14 +5,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.List;
 
 public class Controller  implements Initializable{
-
-    @FXML
-    private ImageView imageView;
     @FXML
     private ImageView finalImage;
 
@@ -20,10 +21,22 @@ public class Controller  implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        File file = new File("src/sample/Box13.jpg");
-        Image image = new Image(file.toURI().toString());
-        imageView.setImage(image);
+        BufferedImage BufImg = imageProc.getNewBuffered();
+        List<SceneObject> objects;
+        objects = imageProc.getObjectList();
+        Graphics g = BufImg.createGraphics();
+        g.setColor(Color.RED);
+        for (SceneObject object : objects) {
+            Rectangle newRect = object.getRect();
+            g.drawRect(newRect.x,newRect.y,newRect.width,newRect.height);
+            g.drawString(object.getName(), newRect.x, newRect.y);
+        }
 
-        finalImage.setImage(imageProc.getSecondImage());
+        g.dispose();
+
+        finalImage.setImage(imageProc.getFXImage(BufImg));
+
+
+
     }
 }

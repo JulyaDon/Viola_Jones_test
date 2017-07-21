@@ -4,120 +4,146 @@ import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.embed.swing.SwingFXUtils;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+
+
 /**
  * Created by July on 10.07.2017.
  */
 public class ImageProcessor {
 
-    private BufferedImage newBuffered = new BufferedImage(640,480, BufferedImage.TYPE_INT_RGB);
+    private BufferedImage newBuffered = new BufferedImage(1280,960, BufferedImage.TYPE_INT_RGB);
+    List<SceneObject> objectList = new ArrayList<>();
+    public ImageProcessor() {
 
-    public ImageProcessor(){
-        int[][] template = {{1, 1, 1, 1},
-                            {1, 0, 0, 1},
-                            {1, 0, 0, 1},
-                            {1, 0, 0, 1},
-                            {1, 1, 1, 1}};
+        int[][] templateL = {{1, 1, 1, 1},
+                {1, 0, 0, 1},
+                {1, 0, 0, 1},
+                {1, 0, 0, 1},
+                {1, 1, 1, 1}};
 
         int[][] newImage = {{255, 255, 255, 255, 255, 255, 255, 255},
-                            {255, 255, 255, 255, 255, 255, 255, 255},
-                            {255, 255, 255, 255, 255, 255, 255, 255},
-                            {255, 255, 255, 0,   0,   255, 255, 255},
-                            {255, 255, 255, 0,   0,   255, 255, 255},
-                            {255, 255, 255, 0,   0,   255, 255, 255},
-                            {255, 255, 255, 255, 255, 255, 255, 255},
-                            {255, 255, 255, 255, 255, 255, 255, 255},
-                            {255, 255, 255, 255, 255, 255, 255, 255}};
+                {255, 255, 255, 255, 255, 255, 255, 255},
+                {255, 255, 255, 255, 255, 255, 255, 255},
+                {255, 255, 255, 0, 0, 255, 255, 255},
+                {255, 255, 255, 0, 0, 255, 255, 255},
+                {255, 255, 255, 0, 0, 255, 255, 255},
+                {255, 255, 255, 255, 255, 255, 255, 255},
+                {255, 255, 255, 255, 255, 255, 255, 255},
+                {255, 255, 255, 255, 255, 255, 255, 255}};
 
         int[][] firstTemplate = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
         int[][] secondTemplate = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
         int[][] testTemplate = {{1, 1, 1, 1, 1, 1, 1, 1},
-                                {1, 0, 0, 0, 0, 0, 0, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 1},
-                                {1, 1, 0, 0, 0, 0, 0, 1},
-                                {1, 1, 1, 1, 1, 0, 0, 1},
-                                {1, 1, 1, 1, 1, 0, 0, 1},
-                                {1, 1, 1, 1, 1, 0, 0, 1},
-                                {1, 1, 1, 1, 1, 1, 1, 1}};
+                {1, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 0, 0, 0, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1}};
 
-
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Image
         int[][] Image;
-        BufferedImage testImage = null;
+
+        File imagePath = new File("src/sample/images/findMe.jpg");
+        //File imagePath = new File("C:/Users/July/Dropbox/prim/findMe.jpg");
+        BufferedImage BufImage = null;
         try {
-            testImage = ImageIO.read(new File("src/sample/Box11.jpg"));
+            BufImage = ImageIO.read(imagePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Image = toRGBArray(BufImage);
+        int[][] binarizedImage = Binarize(Image);
+        //showRGBImage(Image);
+        //showTemplate(binarizedImage);
+        System.out.println("w = " + Image[0].length + "h = " + Image.length);
 
-        Image = toRGBArray(testImage);
-        int[][] binarized = Binarize(Image);
 
-        newBuffered = backToBuffered(Image, 240, 180);
+        //Template
+        int[][] Template;
+        String objName;
 
-//        int[] coordinatesOfFirst = catchSquare(firstTemplate, binarized);
-//        if(coordinatesOfFirst!=null) {
-//            for (int i = 0; i < coordinatesOfFirst.length; i++) {
-//                System.out.println("Coordinate #" + (i+1) + " of first object: " + coordinatesOfFirst[i]);
-//            }
-//        }
-//        else System.out.println("No object was not found");
+        /////////////////////////////////////////////////////////////
 
-        int[] coordinatesOfSecond = catchSquare(testTemplate, binarized);
-        if(coordinatesOfSecond!=null) {
-            for (int i = 0; i < coordinatesOfSecond.length; i++) {
-                System.out.println("Coordinate #" + (i+1) + " of second object: " + coordinatesOfSecond[i]);
+
+        for(int i = 0; i < 12; i++) {
+            objName = "square";
+            File templatePath = new File("src/sample/templates/" + objName + i + ".jpg");
+            BufferedImage BufTemp = null;
+            try {
+                BufTemp = ImageIO.read(templatePath);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }
-        else {
-            int[][] newTemplate = makeTemplate(testTemplate, 2, 2);
-            int count = 0;
-            System.out.println("Increased times: " + count++);
-            showTemplate(newTemplate);
-            coordinatesOfSecond = catchSquare(newTemplate, binarized);
-            if(coordinatesOfSecond!=null) {
-                for (int i = 0; i < coordinatesOfSecond.length; i++) {
-                    System.out.println("Coordinate #" + (i + 1) + " of second object: " + coordinatesOfSecond[i]);
-                }
-            }
+            Template = toRGBArray(BufTemp);
+            int[][] binarizedTemplate = Binarize(Template);
+            objectList.addAll(catchSquare(binarizedTemplate, binarizedImage, objName));
         }
 
+        for(int i = 0; i < 12; i++) {
+            objName = "star";
+            File templatePath2 = new File("src/sample/templates/" + objName + i + ".jpg");
+            BufferedImage BufTemp2 = null;
+            try {
+                BufTemp2 = ImageIO.read(templatePath2);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Template = toRGBArray(BufTemp2);
+            int[][] binarizedTemplate2 = Binarize(Template);
+            objectList.addAll(catchSquare(binarizedTemplate2, binarizedImage, objName));
+        }
+
+
+
+        for(SceneObject obj : objectList){
+            System.out.println("Name: " + obj.getName());
+        }
+        System.out.println("size = " + objectList.size());
+        System.out.println(objectList);
+        newBuffered = backToBuffered(Image, Image[0].length, Image.length);
 
     }
 
@@ -127,28 +153,32 @@ public class ImageProcessor {
      * @param image
      * @return first coordinates of object
      */
-    private int[] catchSquare(int[][] template, int[][] image){
-        double result = 0;
-        int scaleX = 2;
-        int scaleY = 2;
-        int[] coordinates = new int[2];
-        for(int x = 0; x < image.length-template.length; x++){
-            for(int y = 0; y < image[0].length-template[0].length; y++){
+    private List catchSquare(int[][] template, int[][] image, String nameO){
+        int frameWidth = template[0].length;
+        int frameHeight = template.length;
+
+        List<SceneObject> objectList = new ArrayList<>();
+        double result;
+
+        long t1 = System.currentTimeMillis();
+
+        for(int x = 0; x < image.length-template.length; x+=5){
+            for(int y = 0; y < image[0].length-template[0].length; y+=5){
                 result = findingSquare(template, x, y, image);
-                if(result >= 90){
+                if(result >= 92){
+
+                    objectList.add(new SceneObject(new Rectangle(y,x,frameWidth,frameHeight), nameO));
                     System.out.println("They are similar!");
-                    coordinates[0] = x;
-                    coordinates[1] = y;
                     System.out.println("Percentage of similar: " + result);
-                    return coordinates;
                 }
             }
         }
 
-//        scaleX++;
-//        scaleY++;
+        long t2 = System.currentTimeMillis();
 
-        return null;
+        System.out.println("finished in: " + (t2-t1));
+
+        return objectList;
     }
 
     /**
@@ -258,12 +288,12 @@ public class ImageProcessor {
      */
     public int[][] toRGBArray(BufferedImage image){
 
-        int rgbArray[][] = new int[image.getWidth()][image.getHeight()];
+        int rgbArray[][] = new int[image.getHeight()][image.getWidth()];
 
-        for (int i=0; i < image.getWidth(); i++)
-            for (int j=0; j < image.getHeight(); j++)
+        for (int i=0; i < rgbArray.length; i++)
+            for (int j=0; j < rgbArray[0].length; j++)
             {
-                rgbArray[i][j] = image.getRGB(i,j);
+                rgbArray[i][j] = image.getRGB(j,i);
             }
         return rgbArray;
     }
@@ -293,7 +323,7 @@ public class ImageProcessor {
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         for(int i = 0; i < image.length; i++){
             for(int j = 0; j < image[0].length; j++){
-                bi.setRGB(i,j,image[i][j]);
+                bi.setRGB(j,i,image[i][j]);
             }
         }
         return bi;
@@ -303,9 +333,17 @@ public class ImageProcessor {
      * Turns Buffered Image into FXImage
      * @return FXImage
      */
-    public Image getSecondImage(){
-        return SwingFXUtils.toFXImage(newBuffered,null);
+    public Image getFXImage(BufferedImage imageB){
+
+        return SwingFXUtils.toFXImage(imageB,null);
     }
 
+    public BufferedImage getNewBuffered(){
 
+        return newBuffered;
+    }
+
+    public List getObjectList(){
+        return objectList;
+    }
 }
