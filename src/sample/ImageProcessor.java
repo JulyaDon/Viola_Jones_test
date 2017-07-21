@@ -86,8 +86,7 @@ public class ImageProcessor {
         //Image
         int[][] Image;
 
-        File imagePath = new File("src/sample/images/findMe.jpg");
-        //File imagePath = new File("C:/Users/July/Dropbox/prim/findMe.jpg");
+        File imagePath = new File("src/sample/images/findMePleaseMiddle.jpg");
         BufferedImage BufImage = null;
         try {
             BufImage = ImageIO.read(imagePath);
@@ -96,18 +95,12 @@ public class ImageProcessor {
         }
         Image = toRGBArray(BufImage);
         int[][] binarizedImage = Binarize(Image);
-        //showRGBImage(Image);
-        //showTemplate(binarizedImage);
-        System.out.println("w = " + Image[0].length + "h = " + Image.length);
-
 
         //Template
         int[][] Template;
         String objName;
 
-        /////////////////////////////////////////////////////////////
-
-
+        long t1 = System.currentTimeMillis();
         for(int i = 0; i < 12; i++) {
             objName = "square";
             File templatePath = new File("src/sample/templates/" + objName + i + ".jpg");
@@ -136,11 +129,28 @@ public class ImageProcessor {
             objectList.addAll(catchSquare(binarizedTemplate2, binarizedImage, objName));
         }
 
-
+        for(int i = 0; i < 12; i++) {
+            objName = "lightning";
+            File templatePath2 = new File("src/sample/templates/" + objName + i + ".jpg");
+            BufferedImage BufTemp2 = null;
+            try {
+                BufTemp2 = ImageIO.read(templatePath2);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Template = toRGBArray(BufTemp2);
+            int[][] binarizedTemplate2 = Binarize(Template);
+            objectList.addAll(catchSquare(binarizedTemplate2, binarizedImage, objName));
+        }
 
         for(SceneObject obj : objectList){
             System.out.println("Name: " + obj.getName());
         }
+
+        long t2 = System.currentTimeMillis();
+
+        System.out.println("finished in: " + (t2-t1));
+
         System.out.println("size = " + objectList.size());
         System.out.println(objectList);
         newBuffered = backToBuffered(Image, Image[0].length, Image.length);
@@ -160,12 +170,10 @@ public class ImageProcessor {
         List<SceneObject> objectList = new ArrayList<>();
         double result;
 
-        long t1 = System.currentTimeMillis();
-
-        for(int x = 0; x < image.length-template.length; x+=5){
-            for(int y = 0; y < image[0].length-template[0].length; y+=5){
+        for(int x = 0; x < image.length-template.length; x+=7){
+            for(int y = 0; y < image[0].length-template[0].length; y+=7){
                 result = findingSquare(template, x, y, image);
-                if(result >= 92){
+                if(result >= 85){
 
                     objectList.add(new SceneObject(new Rectangle(y,x,frameWidth,frameHeight), nameO));
                     System.out.println("They are similar!");
@@ -173,11 +181,6 @@ public class ImageProcessor {
                 }
             }
         }
-
-        long t2 = System.currentTimeMillis();
-
-        System.out.println("finished in: " + (t2-t1));
-
         return objectList;
     }
 
@@ -196,17 +199,16 @@ public class ImageProcessor {
         int i, j, m, n;
         for(i = 0, m = x; i < template.length && m < template.length+x; i++, m++){
             for(j = 0, n = y; j < template[0].length && n < template[0].length+y; j++, n++){
-                if((template[i][j] == 0 && image[m][n] == 0)){
-                    quantityOfSimilar++;
-                }
-                else if ((template[i][j] == 1 && image[m][n] == 1)){
-                    quantityOfSimilar++;
+                if(image[i+template.length/4][j+template[0].length/4] == 0 && image[(i+template.length/4)+1][j+template[0].length/4] == 0 && image[i+template.length/4][(j+template[0].length/4)+1] == 0) {
+                    if ((template[i][j] == 0 && image[m][n] == 0)) {
+                        quantityOfSimilar++;
+                    } else if ((template[i][j] == 1 && image[m][n] == 1)) {
+                        quantityOfSimilar++;
+                    }
                 }
             }
         }
-        //System.out.println("Similar: " + quantityOfSimilar);
         percent = ((double) quantityOfSimilar/(double) generalQuantity) * 100;
-
         return percent;
     }
 
