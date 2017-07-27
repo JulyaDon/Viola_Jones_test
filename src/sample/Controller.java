@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
@@ -34,7 +35,7 @@ public class Controller  implements Initializable{
 
         g.dispose();
 
-        finalImage.setImage(imageProc.getFXImage(BufImg));
+        finalImage.setImage(SwingFXUtils.toFXImage(BufImg,null));
 
     }
 }

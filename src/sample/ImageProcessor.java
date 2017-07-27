@@ -10,7 +10,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 import javafx.scene.image.Image;
@@ -104,7 +104,7 @@ public class ImageProcessor {
      * @param image
      * @return first coordinates of object
      */
-    private List catchObject(int[][] template, int[][] image, String nameO){
+    private List<SceneObject> catchObject(int[][] template, int[][] image, String nameO){
         int frameWidth = template[0].length;
         int frameHeight = template.length;
 
@@ -287,21 +287,12 @@ public class ImageProcessor {
         return bi;
     }
 
-    /**
-     * Turns Buffered Image into FXImage
-     * @return FXImage
-     */
-    public Image getFXImage(BufferedImage imageB){
-
-        return SwingFXUtils.toFXImage(imageB,null);
-    }
-
     public BufferedImage getNewBuffered(){
 
         return newBuffered;
     }
 
-    public List getObjectList(){
+    public List<SceneObject> getObjectList(){
         return objectList;
     }
 }
