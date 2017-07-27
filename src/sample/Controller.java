@@ -36,7 +36,5 @@ public class Controller  implements Initializable{
 
         finalImage.setImage(imageProc.getFXImage(BufImg));
 
-
-
     }
 }

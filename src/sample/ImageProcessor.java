@@ -22,67 +22,8 @@ import javafx.scene.image.Image;
 public class ImageProcessor {
 
     private BufferedImage newBuffered = new BufferedImage(1280,960, BufferedImage.TYPE_INT_RGB);
-    List<SceneObject> objectList = new ArrayList<>();
+    private List<SceneObject> objectList = new ArrayList<>();
     public ImageProcessor() {
-
-        int[][] templateL = {{1, 1, 1, 1},
-                {1, 0, 0, 1},
-                {1, 0, 0, 1},
-                {1, 0, 0, 1},
-                {1, 1, 1, 1}};
-
-        int[][] newImage = {{255, 255, 255, 255, 255, 255, 255, 255},
-                {255, 255, 255, 255, 255, 255, 255, 255},
-                {255, 255, 255, 255, 255, 255, 255, 255},
-                {255, 255, 255, 0, 0, 255, 255, 255},
-                {255, 255, 255, 0, 0, 255, 255, 255},
-                {255, 255, 255, 0, 0, 255, 255, 255},
-                {255, 255, 255, 255, 255, 255, 255, 255},
-                {255, 255, 255, 255, 255, 255, 255, 255},
-                {255, 255, 255, 255, 255, 255, 255, 255}};
-
-        int[][] firstTemplate = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
-
-        int[][] secondTemplate = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
-
-        int[][] testTemplate = {{1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1}};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Image
         int[][] Image;
 
@@ -112,7 +53,7 @@ public class ImageProcessor {
             }
             Template = toRGBArray(BufTemp);
             int[][] binarizedTemplate = Binarize(Template);
-            objectList.addAll(catchSquare(binarizedTemplate, binarizedImage, objName));
+            objectList.addAll(catchObject(binarizedTemplate, binarizedImage, objName));
         }
 
         for(int i = 0; i < 12; i++) {
@@ -126,7 +67,7 @@ public class ImageProcessor {
             }
             Template = toRGBArray(BufTemp2);
             int[][] binarizedTemplate2 = Binarize(Template);
-            objectList.addAll(catchSquare(binarizedTemplate2, binarizedImage, objName));
+            objectList.addAll(catchObject(binarizedTemplate2, binarizedImage, objName));
         }
 
         for(int i = 0; i < 12; i++) {
@@ -140,7 +81,7 @@ public class ImageProcessor {
             }
             Template = toRGBArray(BufTemp2);
             int[][] binarizedTemplate2 = Binarize(Template);
-            objectList.addAll(catchSquare(binarizedTemplate2, binarizedImage, objName));
+            objectList.addAll(catchObject(binarizedTemplate2, binarizedImage, objName));
         }
 
         for(SceneObject obj : objectList){
@@ -163,7 +104,7 @@ public class ImageProcessor {
      * @param image
      * @return first coordinates of object
      */
-    private List catchSquare(int[][] template, int[][] image, String nameO){
+    private List catchObject(int[][] template, int[][] image, String nameO){
         int frameWidth = template[0].length;
         int frameHeight = template.length;
 
@@ -172,11 +113,10 @@ public class ImageProcessor {
 
         for(int x = 0; x < image.length-template.length; x+=7){
             for(int y = 0; y < image[0].length-template[0].length; y+=7){
-                result = findingSquare(template, x, y, image);
+                result = getPercent(template, x, y, image);
                 if(result >= 85){
 
                     objectList.add(new SceneObject(new Rectangle(y,x,frameWidth,frameHeight), nameO));
-                    System.out.println("They are similar!");
                     System.out.println("Percentage of similar: " + result);
                 }
             }
@@ -192,22 +132,38 @@ public class ImageProcessor {
      * @param image - the whole image
      * @return percent of coincidence between template and part of image
      */
-    private double findingSquare(int[][] template, int x, int y, int[][] image){
+    private double getPercent(int[][] template, int x, int y, int[][] image){
         double percent;
         int generalQuantity = template.length * template[0].length;
         int quantityOfSimilar = 0;
-        int i, j, m, n;
-        for(i = 0, m = x; i < template.length && m < template.length+x; i++, m++){
-            for(j = 0, n = y; j < template[0].length && n < template[0].length+y; j++, n++){
-                if(image[i+template.length/4][j+template[0].length/4] == 0 && image[(i+template.length/4)+1][j+template[0].length/4] == 0 && image[i+template.length/4][(j+template[0].length/4)+1] == 0) {
-                    if ((template[i][j] == 0 && image[m][n] == 0)) {
-                        quantityOfSimilar++;
-                    } else if ((template[i][j] == 1 && image[m][n] == 1)) {
-                        quantityOfSimilar++;
-                    }
-                }
-            }
-        }
+
+//        int frameWidth = template[0].length*2;
+//        int frameHeight = template.length*2;
+//        int average = (frameHeight*frameWidth)/5;
+//
+//        int localAverage = 0;
+//
+//        for (int l = 0; l < frameHeight && x < image.length-frameHeight; l++) {
+//            for (int k = 0; k < frameWidth && y < image[0].length-frameWidth; k++) {
+//                int pixel = (image[x+l][y+k]);
+//                if ( pixel != 0) {
+//                    localAverage += 1;
+//                    if (localAverage >= average){
+                        for(int i = 0, m = x; i < template.length && m < template.length+x; i++, m++){
+                            for(int j = 0, n = y; j < template[0].length && n < template[0].length+y; j++, n++){
+                                if ((template[i][j] == 0 && image[m][n] == 0)) {
+                                    quantityOfSimilar++;
+                                } else if ((template[i][j] == 1 && image[m][n] == 1)) {
+                                    quantityOfSimilar++;
+                                }
+                            }
+                        }
+//                        localAverage = 0;
+//                    }
+//                }
+//            }
+//        }
+
         percent = ((double) quantityOfSimilar/(double) generalQuantity) * 100;
         return percent;
     }
@@ -288,7 +244,7 @@ public class ImageProcessor {
      * @param image - buffered image
      * @return RGB-array
      */
-    public int[][] toRGBArray(BufferedImage image){
+    private int[][] toRGBArray(BufferedImage image){
 
         int rgbArray[][] = new int[image.getHeight()][image.getWidth()];
 
@@ -321,7 +277,7 @@ public class ImageProcessor {
      * @param height of Buffered Image
      * @return new Buffered Image
      */
-    public BufferedImage backToBuffered(int[][] image, int width, int height){
+    private BufferedImage backToBuffered(int[][] image, int width, int height){
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         for(int i = 0; i < image.length; i++){
             for(int j = 0; j < image[0].length; j++){
