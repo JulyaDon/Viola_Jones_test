@@ -1,8 +1,5 @@
 package sample;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-import javafx.embed.swing.SwingFXUtils;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -12,8 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-
-import javafx.scene.image.Image;
 
 
 /**
@@ -27,7 +22,7 @@ public class ImageProcessor {
         //Image
         int[][] Image;
 
-        File imagePath = new File("src/sample/images/findMePleaseMiddle.jpg");
+        File imagePath = new File("src/sample/images/image1.jpg");
         BufferedImage BufImage = null;
         try {
             BufImage = ImageIO.read(imagePath);
@@ -39,63 +34,25 @@ public class ImageProcessor {
 
         //Template
         int[][] Template;
-        String objName;
 
-        long t1 = System.currentTimeMillis();
-        for(int i = 0; i < 12; i++) {
-            objName = "square";
-            File templatePath = new File("src/sample/templates/" + objName + i + ".jpg");
-            BufferedImage BufTemp = null;
-            try {
-                BufTemp = ImageIO.read(templatePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Template = toRGBArray(BufTemp);
-            int[][] binarizedTemplate = Binarize(Template);
-            objectList.addAll(catchObject(binarizedTemplate, binarizedImage, objName));
+        File templatePath = new File("src/sample/images/template.jpg");
+        BufferedImage BufTemp = null;
+        try {
+            BufTemp = ImageIO.read(templatePath);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Template = toRGBArray(BufTemp);
+        int[][] binarizedTemplate = Binarize(Template);
 
-        for(int i = 0; i < 12; i++) {
-            objName = "star";
-            File templatePath2 = new File("src/sample/templates/" + objName + i + ".jpg");
-            BufferedImage BufTemp2 = null;
-            try {
-                BufTemp2 = ImageIO.read(templatePath2);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Template = toRGBArray(BufTemp2);
-            int[][] binarizedTemplate2 = Binarize(Template);
-            objectList.addAll(catchObject(binarizedTemplate2, binarizedImage, objName));
-        }
+        catchObject(binarizedTemplate, binarizedImage);
 
-        for(int i = 0; i < 12; i++) {
-            objName = "lightning";
-            File templatePath2 = new File("src/sample/templates/" + objName + i + ".jpg");
-            BufferedImage BufTemp2 = null;
-            try {
-                BufTemp2 = ImageIO.read(templatePath2);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Template = toRGBArray(BufTemp2);
-            int[][] binarizedTemplate2 = Binarize(Template);
-            objectList.addAll(catchObject(binarizedTemplate2, binarizedImage, objName));
-        }
-
-        for(SceneObject obj : objectList){
-            System.out.println("Name: " + obj.getName());
-        }
-
-        long t2 = System.currentTimeMillis();
-
-        System.out.println("finished in: " + (t2-t1));
-
-        System.out.println("size = " + objectList.size());
-        System.out.println(objectList);
         newBuffered = backToBuffered(Image, Image[0].length, Image.length);
 
+//        System.out.println("Width: " + imageL[0].length);
+//        System.out.println("Height: " + imageL.length);
+//        int[][] newT = resizePixels(imageL, 2, 3);
+//        showTemplate(newT);
     }
 
     /**
@@ -104,19 +61,19 @@ public class ImageProcessor {
      * @param image
      * @return first coordinates of object
      */
-    private List<SceneObject> catchObject(int[][] template, int[][] image, String nameO){
+    private List<SceneObject> catchObject(int[][] template, int[][] image){
         int frameWidth = template[0].length;
         int frameHeight = template.length;
 
         List<SceneObject> objectList = new ArrayList<>();
         double result;
 
-        for(int x = 0; x < image.length-template.length; x+=7){
-            for(int y = 0; y < image[0].length-template[0].length; y+=7){
+        for(int x = 0; x < image.length-template.length; x+=frameHeight){
+            for(int y = 0; y < image[0].length-template[0].length; y+=frameWidth){
                 result = getPercent(template, x, y, image);
-                if(result >= 85){
+                if(result >= 10){
 
-                    objectList.add(new SceneObject(new Rectangle(y,x,frameWidth,frameHeight), nameO));
+                    objectList.add(new SceneObject(new Rectangle(y,x,frameWidth,frameHeight), 0));
                     System.out.println("Percentage of similar: " + result);
                 }
             }
@@ -137,32 +94,15 @@ public class ImageProcessor {
         int generalQuantity = template.length * template[0].length;
         int quantityOfSimilar = 0;
 
-//        int frameWidth = template[0].length*2;
-//        int frameHeight = template.length*2;
-//        int average = (frameHeight*frameWidth)/5;
-//
-//        int localAverage = 0;
-//
-//        for (int l = 0; l < frameHeight && x < image.length-frameHeight; l++) {
-//            for (int k = 0; k < frameWidth && y < image[0].length-frameWidth; k++) {
-//                int pixel = (image[x+l][y+k]);
-//                if ( pixel != 0) {
-//                    localAverage += 1;
-//                    if (localAverage >= average){
-                        for(int i = 0, m = x; i < template.length && m < template.length+x; i++, m++){
-                            for(int j = 0, n = y; j < template[0].length && n < template[0].length+y; j++, n++){
-                                if ((template[i][j] == 0 && image[m][n] == 0)) {
-                                    quantityOfSimilar++;
-                                } else if ((template[i][j] == 1 && image[m][n] == 1)) {
-                                    quantityOfSimilar++;
-                                }
-                            }
-                        }
-//                        localAverage = 0;
-//                    }
-//                }
-//            }
-//        }
+        for(int i = 0, m = x; i < template.length && m < template.length+x; i++, m++){
+            for(int j = 0, n = y; j < template[0].length && n < template[0].length+y; j++, n++){
+                if ((template[i][j] == 0 && image[m][n] == 0)) {
+                    quantityOfSimilar++;
+                } else if ((template[i][j] == 1 && image[m][n] == 1)) {
+                    quantityOfSimilar++;
+                }
+            }
+        }
 
         percent = ((double) quantityOfSimilar/(double) generalQuantity) * 100;
         return percent;
@@ -220,7 +160,7 @@ public class ImageProcessor {
      * @return NEW array with 0 and 1
      */
     private int[][] Binarize(int[][] array){
-        double BinarizationThreshold = 0x20;
+        double BinarizationThreshold = 127;
         int[][] BinarizedImage = new int[array.length][array[0].length];
         int[][] BinarizedImageRGB = new int[array.length][array[0].length];
 
@@ -294,5 +234,22 @@ public class ImageProcessor {
 
     public List<SceneObject> getObjectList(){
         return objectList;
+    }
+
+    public int[][] resizePixels(int[][] pixels, int w2,int h2) {
+        int[][] temp = new int[h2][w2] ;
+        int w1 = pixels[0].length;
+        int h1 = pixels.length;
+        double x_ratio = w1/(double)w2 ;
+        double y_ratio = h1/(double)h2 ;
+        double px, py ;
+        for (int i=0;i<h2;i++) {
+            for (int j=0;j<w2;j++) {
+                px = Math.floor(j*x_ratio) ;
+                py = Math.floor(i*y_ratio) ;
+                temp[i][j] = pixels[(int)((py*w1)+px)/w1][(int)((py*w1)+px)%w1] ;
+            }
+        }
+        return temp ;
     }
 }

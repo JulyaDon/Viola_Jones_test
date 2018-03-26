@@ -28,9 +28,8 @@ public class Controller  implements Initializable{
         Graphics g = BufImg.createGraphics();
         g.setColor(Color.RED);
         for (SceneObject object : objects) {
-            Rectangle newRect = object.getRect();
-            g.drawRect(newRect.x,newRect.y,newRect.width,newRect.height);
-            g.drawString(object.getName(), newRect.x, newRect.y);
+            Rectangle bounds = object.getBounds();
+            g.drawRect(bounds.x,bounds.y,bounds.width,bounds.height);
         }
 
         g.dispose();
