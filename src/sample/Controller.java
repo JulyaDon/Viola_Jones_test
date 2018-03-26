@@ -35,6 +35,6 @@ public class Controller  implements Initializable{
         g.dispose();
 
         finalImage.setImage(SwingFXUtils.toFXImage(BufImg,null));
-        //comment for commit
+
     }
 }
